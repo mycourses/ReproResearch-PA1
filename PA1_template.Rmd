@@ -1,0 +1,79 @@
+# Reproducible Research: Peer Assessment 1
+---
+<br/>
+
+## Loading and preprocessing the data
+<br/>
+
+Read activity.csv into a data frame and view some rows
+```{r}
+df <- read.csv("activity.csv")
+df[2303:2313,]
+```
+<br/>
+
+And for good measure - a summary view...
+```{r}
+summary(df)
+```
+<br/>
+
+Structure of data frame df
+```{r}
+str(df)
+```
+(note the NAs)
+<br/>
+<br/>
+
+Create a new, clean data frame without the NAs, reset the factor  
+levels and compare it to the structure of the original df
+```{r}
+cdf <- df[! is.na(df$steps), ]
+cdf$date <- cdf$date[, drop=TRUE]
+str(cdf)
+```
+Nice and clean... We're good to go.
+
+<br/>
+## What is mean total number of steps taken per day?
+<br/>
+Histogram of the total number of steps taken each day
+```{r}
+hist(as.vector(tapply(cdf$steps, list(cdf$date), FUN=sum)), xlab="No of steps per day", ylab="Frequency / No of days", main="Total Number of Steps Taken Each day")
+```
+<br/>
+Mean number of steps per day
+```{r}
+hist(as.vector(tapply(cdf$steps, list(cdf$date), FUN=mean)), xlab="Mean steps per day", ylab="Frequency / No of days", main="Average (Mean) Number of Steps Per day")
+```
+<br/>
+The large number of zeroes (0) per day gives a median of 0 on day variables
+```{r}
+as.vector(tapply(cdf$steps, list(cdf$date), FUN=median))
+```
+<br/>
+## What is the average daily activity pattern?
+<br/>
+
+Time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+```{r}
+msteps <- aggregate(cdf$steps, by=list(cdf$interval), mean)
+plot(msteps$Group.1, msteps$x, type="l", main="Mean No. of Steps per Interval Accross all Days", xlab="Daily 5 Minute Intervals", ylab="No. of Steps")
+```
+<br/>
+
+Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r}
+msteps$Group.1[which.max(msteps$x)]
+```
+<br/>
+<br/>
+
+## Imputing missing values
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+
